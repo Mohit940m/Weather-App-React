@@ -47,7 +47,6 @@ This Weather App is built using React, Tailwind CSS, and the OpenWeather API. It
 - **Tailwind CSS**: Utility-first CSS framework for styling
 - **OpenWeather API**: Provides weather data
 - **React Router**: For navigation
-- **Axios**: For making API requests
 
 ## Contributing
 1. Fork the repository.
