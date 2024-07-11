@@ -17,8 +17,8 @@ This Weather App is built using React, Tailwind CSS, and the OpenWeather API. It
 
 1. Clone the repository:
     ```bash
-    git clone [https://github.com/yourusername/weather-app.git](https://github.com/Mohit940m/Weather-App-React.git)
-    cd weather-app
+    git clone (https://github.com/Mohit940m/Weather-App-React.git)
+    cd weather-app-react
     ```
 
 2. Install dependencies:
