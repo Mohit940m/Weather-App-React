@@ -2,6 +2,110 @@
  * Weather AI Prediction Service
  * Provides AI-generated recommendations based on weather data
  */
+import { DateTime } from "luxon";
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+
+/**
+ * Generates weather advice using the Gemini API
+ * @param {Object} weatherData - Current and forecast weather data
+ * @returns {Promise<Object>} - AI-generated advice and recommendations
+ */
+const generateWeatherAdvice = async (weatherData) => {
+  try {
+    // Extract relevant weather information
+    const { 
+      temp, 
+      humidity, 
+      details, 
+      speed: windSpeed,
+      formattedLocalTime,
+      daily
+    } = weatherData;
+    
+    // Format the prompt for the AI
+    const prompt = `
+      Based on the following weather data, provide concise, practical advice:
+      
+      Current weather: ${details} at ${temp}°, humidity ${humidity}%, wind speed ${windSpeed} m/s
+      Date and time: ${formattedLocalTime}
+      
+      Upcoming forecast:
+      ${daily.map(day => `${day.title}: ${day.temp}°`).join('\n')}
+      
+      Please provide:
+      1. Daily items to bring (umbrella, coat, etc.)
+      2. Health tips related to the weather
+      3. Recommended outdoor activities for today
+      4. Recommended activities for the upcoming days
+      5. Running advice based on current conditions
+      
+      Format the response as JSON with these keys: dailyItems, healthTips, todayActivities, upcomingActivities, runningAdvice
+    `;
+
+    // Call the Gemini API
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: prompt
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1024,
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to get AI prediction');
+    }
+
+    const data = await response.json();
+    
+    // Extract the text response from Gemini
+    const textResponse = data.candidates[0].content.parts[0].text;
+    
+    // Parse the JSON response
+    // Using a try-catch because the AI might not always return valid JSON
+    try {
+      // Find JSON content between ```json and ``` if present
+      let jsonStr = textResponse;
+      const jsonMatch = textResponse.match(/```json\n([\s\S]*?)\n```/);
+      if (jsonMatch && jsonMatch[1]) {
+        jsonStr = jsonMatch[1];
+      }
+      console.log("AI Response:", jsonStr);
+      
+      return JSON.parse(jsonStr);
+    } catch (error) {
+      console.error("Error parsing AI response:", error);
+      
+      // Fallback: Return a structured response with the raw text
+      return {
+        dailyItems: "Could not generate specific recommendations",
+        healthTips: "Could not generate specific recommendations",
+        todayActivities: "Could not generate specific recommendations",
+        upcomingActivities: "Could not generate specific recommendations",
+        runningAdvice: "Could not generate specific recommendations",
+        rawResponse: textResponse
+      };
+    }
+  } catch (error) {
+    console.error("Error generating weather advice:", error);
+    throw error;
+  }
+};
 
 /**
  * Generate recommendations based on weather conditions
