@@ -10,11 +10,15 @@ import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// import getFormattedWeatherData from '../services/weatherService';
+import WeatherAIPrediction from './components/WeatherAIPrediction';
 const App =  () => {
 
   const [query, setQuery] = useState({q: 'sodepur'})
   const [units, setUnits] = useState('metric')
   const [weather, setWeather] = useState(null)
+
+  const [loading, setLoading] = useState(true);
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -56,6 +60,10 @@ const App =  () => {
         <>
         <TimeAndLocktion weather={weather} />
         <TempAndDerails weather={weather} units={units} />
+
+        <div className="mt-6">
+          <WeatherAIPrediction weatherData={weather} />
+        </div>
   
         <Forecast title="3 hourly forcust " data={weather.hourly} />
         <Forecast title="daily forcust" data={weather.daily} />

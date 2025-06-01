@@ -14,13 +14,14 @@ const TopBotton = ({ setQuery }) => {
   return (
     <div className='relative'>
       {/* Hamburger Icon */}
-      <div className='md:hidden flex items-center justify-start'>
+      <div className='md:hidden flex items-center justify-start space-x-4'>
         <button 
           className='text-white text-2xl focus:outline-none' 
           onClick={() => setMenuOpen(!menuOpen)}
         >
           &#9776; {/* Hamburger Icon */}
         </button>
+        <span className="text-white text-xl font-medium">Weather AI App</span>
       </div>
 
       {/* City Buttons */}
