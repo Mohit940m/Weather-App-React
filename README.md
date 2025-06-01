@@ -12,6 +12,40 @@ This Weather App is built using React, Tailwind CSS, and the OpenWeather API. It
 - **Temperature Converter**: Allows users to switch between Celsius and Fahrenheit.
 - **Mobile Scalable**: The app is designed to be fully responsive and works well on mobile devices.
 
+### 🤖 Smart AI Recommendations (via Gemini API)
+- **Items to Bring**: Suggests essentials like umbrellas or jackets.
+- **Health Tips**: Personalized health suggestions depending on weather conditions.
+- **Recommended Activities**: Outdoor/indoor activity tips for today and the week ahead.
+- **Running Advice**: Tailored running tips based on live weather metrics.
+
+### 🛠 Fallback System
+If the Gemini AI service fails, the app uses a **rule-based fallback** system to generate recommendations based on:
+- Temperature
+- Weather Conditions
+- Wind Speed
+- Humidity
+
+ ### 📱 Responsive Design
+- Fully mobile-friendly with a card-based layout.
+- Optimized for performance and accessibility.
+
+---
+
+## 🧠 AI Integration Instructions
+
+To enable Gemini AI recommendations:
+
+1. **Add the following files to your project**:
+   - `services/weatherAIPredictionService.js`
+   - `components/WeatherAIPrediction.jsx`
+
+2. **Usage in your app**:
+   ```jsx
+   import WeatherAIPrediction from './components/WeatherAIPrediction';
+
+   // Inside your main component's JSX
+   <WeatherAIPrediction weatherData={yourFetchedWeatherData} />
+
 
 ## Installation
 
@@ -29,6 +63,7 @@ This Weather App is built using React, Tailwind CSS, and the OpenWeather API. It
 3. Create a `.env` file in the root directory and add your OpenWeather API key:
     ```plaintext
     REACT_APP_OPENWEATHER_API_KEY=your_api_key_here
+    VITE_GEMINI_API_KEY=your_gemini_api_key
     ```
 
 4. Start the development server:
@@ -47,6 +82,7 @@ This Weather App is built using React, Tailwind CSS, and the OpenWeather API. It
 - **Tailwind CSS**: Utility-first CSS framework for styling
 - **OpenWeather API**: Provides weather data
 - **React Router**: For navigation
+- **Gemini AI API**: For AI advice
 
 ## Contributing
 1. Fork the repository.
