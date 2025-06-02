@@ -20,7 +20,7 @@ const getWeatherData = async (infoType, searchParams) => {
     }
 };
 
-const iconUrlFromCode = (icon) => `http://openweathermap.org/img/wn/${icon}@2x.png`;
+const iconUrlFromCode = (icon) => `https://openweathermap.org/img/wn/${icon}@2x.png`;
 
 const formatToLocalTime = (secs, offset, format = "cccc, dd LLL yyyy' | Local time: 'hh:mm a") => 
     DateTime.fromSeconds(secs, { zone: 'utc' }).plus({ seconds: offset }).toFormat(format);
