@@ -4,15 +4,15 @@
  */
 import { DateTime } from "luxon";
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
 /**
  * Generates weather advice using the Gemini API
  * @param {Object} weatherData - Current and forecast weather data
  * @returns {Promise<Object>} - AI-generated advice and recommendations
  */
-const generateWeatherAdvice = async (weatherData) => {
+export  const generateWeatherAdvice = async (weatherData) => {
   try {
     // Extract relevant weather information
     const { 
@@ -68,7 +68,17 @@ const generateWeatherAdvice = async (weatherData) => {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to get AI prediction');
+      let errorBody = "Could not retrieve error body.";
+      try {
+        // Attempt to parse the error response from Gemini API
+        const errorData = await response.json();
+        errorBody = JSON.stringify(errorData);
+      } catch (e) {
+        // If parsing as JSON fails, try to read as text
+        errorBody = await response.text().catch(() => "Failed to read error body as text.");
+      }
+      console.error(`Gemini API Error: Status ${response.status}, Body: ${errorBody}`);
+      throw new Error(`Failed to get AI prediction. Status: ${response.status}`);
     }
 
     const data = await response.json();

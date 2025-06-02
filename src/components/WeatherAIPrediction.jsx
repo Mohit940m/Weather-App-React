@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import getWeatherPredictions from '../services/weatherAIPredictionService';
+// import getWeatherPredictions from '../services/weatherAIPredictionService';
+import { generateWeatherAdvice } from '../services/weatherAIPredictionService';
 import { FaUmbrella, FaHeartbeat, FaMountain, FaRunning } from 'react-icons/fa';
 import { MdSchedule } from 'react-icons/md';
 
@@ -14,7 +15,7 @@ function WeatherAIPrediction({ weatherData }) {
       
       try {
         setLoading(true);
-        const data = await getWeatherPredictions(weatherData);
+        const data = await generateWeatherAdvice(weatherData);
         setPredictions(data);
         setError(null);
       } catch (err) {
@@ -48,6 +49,33 @@ function WeatherAIPrediction({ weatherData }) {
 
   if (!predictions) return null;
 
+  // Helper function to render content that might be a string, an array, or an object
+  const renderPredictionContent = (content) => {
+    if (typeof content === 'string') {
+      return <p>{content}</p>;
+    }
+    if (Array.isArray(content)) {
+      return (
+        <ul className="list-disc list-inside">
+          {content.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      );
+    }
+    if (typeof content === 'object' && content !== null) {
+      return (
+        <div>
+          {Object.entries(content).map(([key, value]) => (
+            <p key={key}><strong>{key}:</strong> {String(value)}</p>
+          ))}
+        </div>
+      );
+    }
+    return <p>No advice available.</p>;
+  };
+
+
   return (
     <div className="p-6 bg-white bg-opacity-20 rounded-lg shadow-lg backdrop-blur-lg">
       <h2 className="text-xl font-medium mb-4">AI Weather Assistant</h2>
@@ -59,7 +87,7 @@ function WeatherAIPrediction({ weatherData }) {
             <FaUmbrella className="mr-2" size={20} />
             <h3 className="font-medium">What to Bring</h3>
           </div>
-          <p>{predictions.dailyItems}</p>
+          {renderPredictionContent(predictions.dailyItems)}
         </div>
         
         {/* Health Tips */}
@@ -68,7 +96,7 @@ function WeatherAIPrediction({ weatherData }) {
             <FaHeartbeat className="mr-2" size={20} />
             <h3 className="font-medium">Health Tips</h3>
           </div>
-          <p>{predictions.healthTips}</p>
+          {renderPredictionContent(predictions.healthTips)}
         </div>
         
         {/* Today's Activities */}
@@ -77,7 +105,7 @@ function WeatherAIPrediction({ weatherData }) {
             <FaMountain className="mr-2" size={20} />
             <h3 className="font-medium">Recommended Activities Today</h3>
           </div>
-          <p>{predictions.todayActivities}</p>
+          {renderPredictionContent(predictions.todayActivities)}
         </div>
         
         {/* Upcoming Activities */}
@@ -86,7 +114,7 @@ function WeatherAIPrediction({ weatherData }) {
             <MdSchedule className="mr-2" size={20} />
             <h3 className="font-medium">Upcoming Days</h3>
           </div>
-          <p>{predictions.upcomingActivities}</p>
+          {renderPredictionContent(predictions.upcomingActivities)}
         </div>
         
         {/* Running Advice */}
@@ -95,7 +123,7 @@ function WeatherAIPrediction({ weatherData }) {
             <FaRunning className="mr-2" size={20} />
             <h3 className="font-medium">Running Advice</h3>
           </div>
-          <p>{predictions.runningAdvice}</p>
+          {renderPredictionContent(predictions.runningAdvice)}
         </div>
       </div>
     </div>
