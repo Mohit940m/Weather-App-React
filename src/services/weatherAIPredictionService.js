@@ -1,6 +1,7 @@
 
 import { DateTime } from "luxon";
 
+
 if (!process.env.REACT_APP_GEMINI_API_KEY) {
   console.warn("Gemini API Key (REACT_APP_GEMINI_API_KEY) is not set in environment variables. AI predictions will likely fail.");
 }
